@@ -61,7 +61,7 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
     }
 
     /**
-     * Check user roles against Admin or Config Role memebership
+     * Check user roles against Admin or Config Role membership
      */
     const checkAdmin = async () => {
       try {
