@@ -60,30 +60,36 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
       )
     }
 
+    /**
+     * Check user roles against Admin or Config Role memebership
+     */
     const checkAdmin = async () => {
       try {
         const contextData = await extensionSDK.refreshContextData()
-        const all_roles = await sdk
+        const allRoles = await sdk
           .ok(sdk.all_roles({ fields: 'id, name' }))
           .then((value) => {
             return value
           })
-        const { role_ids: user_roles } = await sdk
+        const { role_ids: userRoles } = await sdk
           .ok(sdk.me())
           .then((value) => {
             return value
           })
-        const { configRoles: config_roles } = contextData
-        const { id: admin_role_id } =
-          all_roles.find((role) => role.name === 'dmin') || {}
-        const isAdmin = user_roles.includes(admin_role_id)
+        const { configRoles } = contextData
 
-        // Config roles stored by name in context data and
-        // needs Looker role id reference for following comparison.
-        const config_roles_by_id = config_roles.map((config_role: string) =>
-          all_roles.find((role) => role.name === config_role)
+        // Check if user has role Admin
+        const { id: adminRoleId } =
+          allRoles.find((role) => role.name === 'Admin') || {}
+        const isAdmin = userRoles.includes(adminRoleId)
+
+        // Check if user has any role in config roles.
+        // Config roles are stored by name in context data and
+        // needs Looker role id reference for follow-on comparison.
+        const config_roles_by_id = configRoles.map((config_role: string) =>
+          allRoles.find((role) => role.name === config_role)
         )
-        const isConfigRole = user_roles.some((user_role: number) =>
+        const isConfigRole = userRoles.some((user_role: number) =>
           config_roles_by_id.find(
             (config_role: number) => config_role.id === user_role
           )
