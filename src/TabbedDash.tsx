@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import * as semver from 'semver'
 import { Box, ComponentsProvider, MessageBar } from '@looker/components'
@@ -8,10 +8,7 @@ import {
   ExtensionContextData,
 } from '@looker/extension-sdk-react'
 import { EmbedDashboard } from './components/Embed'
-import { Configure } from './components/Configure'
 import { TabbedDashProps, ConfigurationData } from './types'
-import { update } from 'lodash'
-import { IRole } from '@looker/sdk/lib/node'
 
 export enum ROUTES {
   EMBED_DASHBOARD = '/',
@@ -66,19 +63,32 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
     const checkAdmin = async () => {
       try {
         const contextData = await extensionSDK.refreshContextData()
-        const roles = await sdk
-          .ok(sdk.all_roles({ fields: 'name' }))
-          .then((value) =>
-            value.map((role) => {
-              return role.name
-            })
+        const all_roles = await sdk
+          .ok(sdk.all_roles({ fields: 'id, name' }))
+          .then((value) => {
+            return value
+          })
+        const { role_ids: user_roles } = await sdk
+          .ok(sdk.me())
+          .then((value) => {
+            return value
+          })
+        const { configRoles: config_roles } = contextData
+        const { id: admin_role_id } =
+          all_roles.find((role) => role.name === 'dmin') || {}
+        const isAdmin = user_roles.includes(admin_role_id)
+
+        // Config roles stored by name in context data and
+        // needs Looker role id reference for following comparison.
+        const config_roles_by_id = config_roles.map((config_role: string) =>
+          all_roles.find((role) => role.name === config_role)
+        )
+        const isConfigRole = user_roles.some((user_role: number) =>
+          config_roles_by_id.find(
+            (config_role: number) => config_role.id === user_role
           )
-        console.log('roles', roles)
-        const isAdmin =
-          roles.includes('Admin') ||
-          (contextData.configRoles &&
-            roles.some((role) => contextData.configRoles.includes(role)))
-        setIsAdmin(isAdmin)
+        )
+        setIsAdmin(isAdmin || isConfigRole)
       } catch (error) {
         console.error(error)
       }
