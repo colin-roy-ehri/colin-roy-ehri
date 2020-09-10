@@ -65,7 +65,7 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
      */
     const checkAdmin = async () => {
       try {
-        const { configRoles } = await extensionSDK.refreshContextData()
+        const { configRoles = [] } = await extensionSDK.refreshContextData()
         const allRoles = await sdk
           .ok(sdk.all_roles({ fields: 'id, name' }))
           .then((value) => {
