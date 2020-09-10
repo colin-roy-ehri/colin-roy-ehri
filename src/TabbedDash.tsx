@@ -9,6 +9,7 @@ import {
 } from '@looker/extension-sdk-react'
 import { EmbedDashboard } from './components/Embed'
 import { TabbedDashProps, ConfigurationData } from './types'
+import { allowedNodeEnvironmentFlags } from 'process'
 
 export enum ROUTES {
   EMBED_DASHBOARD = '/',
@@ -71,11 +72,9 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
           .then((value) => {
             return value
           })
-        const { role_ids: userRoles } = await sdk
-          .ok(sdk.me())
-          .then((value) => {
-            return value
-          })
+        const { role_ids: userRoles } = await sdk.ok(sdk.me()).then((value) => {
+          return value
+        })
 
         // Check if user has role Admin
         const { id: adminRoleId } =
@@ -85,13 +84,11 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
         // Check if user has any role in config roles.
         // Config roles are stored by name in context data and
         // needs Looker role id reference for follow-on comparison.
-        const config_roles_by_id = configRoles.map((config_role: string) =>
-          allRoles.find((role) => role.name === config_role)
+        const config_roles_by_id = allRoles.filter((role) =>
+          configRoles.includes(role.name)
         )
         const isConfigRole = userRoles.some((user_role: number) =>
-          config_roles_by_id.find(
-            (config_role: number) => config_role.id === user_role
-          )
+          config_roles_by_id.find((config_role) => config_role.id === user_role)
         )
         setIsAdmin(isAdmin || isConfigRole)
       } catch (error) {
