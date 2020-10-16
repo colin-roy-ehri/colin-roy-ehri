@@ -13,13 +13,18 @@ export const Dashboard: React.FC<any> = ({
   setDashboard,
 }) => {
 
+  const openExploreInNewWindow = (event: any) => {
+    const db = LookerEmbedSDK.createExploreWithUrl(event.url)
+    extensionContext.extensionSDK.openBrowserWindow(db.url, '_explore')
+    return { cancel: !event.modal }
+  }
+
   const canceller = (event: any) => {
     return { cancel: !event.modal }
   }
 
   const setupDashboard = (dashboard: LookerEmbedDashboard) => {
     const elementOptions = { elements: { 'test': { title_hidden: true } } }
-    // console.log('setting dashboard options', {elementOptions})
     dashboard.setOptions(elementOptions as LookerDashboardOptions)
     setDashboard(dashboard)
     dashboard.setOptions(elementOptions as LookerDashboardOptions)
@@ -46,7 +51,7 @@ export const Dashboard: React.FC<any> = ({
         db.appendTo(el)
           .on('drillmenu:click', canceller)
           .on('drillmodal:explore', canceller)
-          .on('dashboard:tile:explore', canceller)
+          .on('dashboard:tile:explore', openExploreInNewWindow)
           .on('dashboard:tile:view', canceller)
           .build()
           .connect()
