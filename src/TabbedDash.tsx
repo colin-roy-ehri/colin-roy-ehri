@@ -29,7 +29,8 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
   const [configurationData, setConfigurationData] = useState<
     ConfigurationData
   >()
-  const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
+  const [userRoles, setUserRoles] = React.useState<string[]>()
 
   useEffect(() => {
     const initialize = async () => {
@@ -53,9 +54,9 @@ export const TabbedDash: React.FC<TabbedDashProps> = ({
       setConfigurationData(
         context || {
           theme: 'Looker',
-          dashboards: [
+          dashboards: [ 
           ],
-          configRoles: [
+          configRoles: [ ''
           ],
         }
       )

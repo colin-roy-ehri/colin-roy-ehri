@@ -185,7 +185,6 @@ export const Configure: React.FC<ConfigureProps> = ({
 
       <Box m="large">
         <Form
-          // validationMessages={validationMessages}
           onSubmit={onConfigChangeSubmit}
         >
           <Divider mt="medium" appearance="onDark" />

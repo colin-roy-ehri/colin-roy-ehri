@@ -10,7 +10,7 @@ import {
   Button,
   Flex,
   FlexItem,
-  IconButton,
+  IconButton, Heading, SpaceVertical, MessageBar, Paragraph
 } from '@looker/components'
 import { LookerEmbedDashboard } from '@looker/embed-sdk'
 import {
@@ -29,7 +29,7 @@ export const EmbedDashboard: React.FC<EmbedProps> = ({
   dashboards,
   configurationData,
   updateConfigurationData,
-  isAdmin
+  isAdmin,
 }) => {
   const [dashboardNext, setDashboardNext] = React.useState(true)
   const [running, setRunning] = React.useState(true)
@@ -111,21 +111,33 @@ export const EmbedDashboard: React.FC<EmbedProps> = ({
 
   return (
     <>
+    {configurationData.dashboards.length == 0 && (
+      <Box m="large" >
+        <SpaceVertical>
+      <Heading>Welcome to the Tabbed Dashboards Extension</Heading>
+
+          <Paragraph>
+            Please configure dashboards with the configuration icon at the right of the page.
+          </Paragraph>
+          </SpaceVertical>
+      </Box>
+    )}
+    {configurationData.dashboards.length > 0 && (
       <div key={selectedTab}>
         <Tabs
           defaultIndex={selectedTab}
           onChange={(index) => handleSelectedTab(index)}
         >
-            <StyledTabList
-              selectedIndex={selectedTab}
-              onSelectTab={(index: any) => handleSelectedTab(index)}
-            >
-              {dashboards.map(({ title }, index) => {
-                return <StyledTab key={index}>{title}</StyledTab>
-              })}
-            </StyledTabList>
+          <StyledTabList
+            selectedIndex={selectedTab}
+            onSelectTab={(index: any) => handleSelectedTab(index)}
+          >
+            {configurationData.dashboards.map(({ title }, index) => {
+              return <StyledTab key={index}>{title}</StyledTab>
+            })}
+          </StyledTabList>
           <TabPanels>
-            {dashboards.map(({ next }, index) => {
+            {configurationData.dashboards.map(({ next }, index) => {
               return (
                 <TabPanel key={index}>
                   <Dashboard
@@ -141,8 +153,9 @@ export const EmbedDashboard: React.FC<EmbedProps> = ({
             })}
           </TabPanels>
         </Tabs>
-      </div>
-      {isAdmin ? (
+        </div>
+    )}
+    {isAdmin ? (
         <div style={configIconLocation}>
           <DialogManager
             content={
@@ -161,10 +174,10 @@ export const EmbedDashboard: React.FC<EmbedProps> = ({
             />
           </DialogManager>
         </div>
-      ) : (
+    ) : (
         ''
       )}
-      )
+      ) 
     </>
   )
 }
