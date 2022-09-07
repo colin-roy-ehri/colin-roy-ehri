@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @colin-roy-ehri
 - 👀 I’m interested in Looker, React, custom visualizations, AI, Data applications
-- 🌱 I’m currently learning the ins and outs of all the Looker SDKs
+- 🌱 I’m currently learning how to write better DBT
 - 💞️ I’m looking to collaborate on any project regarding animal rights, veganism and plant based foods
 - 📫 How to reach me by email colin.roy.ehri@gmail.com
 
