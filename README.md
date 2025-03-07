@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @colin-roy-ehri
-- 👀 I’m interested in Looker, React, custom visualizations, AI, Data applications
-- 🌱 I’m currently learning how to build Data + GenAI apps
-- 💞️ I’m looking to collaborate on any project regarding animal rights, veganism and plant based foods
+- 👀 I’m interested in Looker, React, custom visualizations, ML, Agents, and Data applications
+- 🌱 I’m currently building AI agents for analytics
+- 💞️ I’m looking to collaborate on any project regarding animal rights, human services and molecular biology
 - 📫 How to reach me by email colin.roy.ehri@gmail.com
 
 <!---
